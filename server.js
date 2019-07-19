@@ -9,7 +9,7 @@ function getServer() {
   
   server.addService(routeguide.RouteGuide.service, {
     numberToNumber: numberToNumber,
-    readFile, readFile
+    readFile: readFile
   });
     // routeguide.RouteGuide === 
         // { RouteGuide:

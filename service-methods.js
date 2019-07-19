@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+var base64Img = require('base64-img');
 
 
 function numberPlusFive({number}) {
@@ -16,49 +17,41 @@ function numberToNumber(call, callback) {
 
 
 function readFile(call) {
-  let filePath = path.join(__dirname + '/Bear.mp4')
+  let filePath = path.join(__dirname + '/sampleJPG.jpg')
+  // console.log(StreamZip)
   // console.log(call)
   // let readFile = fs.readFileSync(filePath);
   
-  let test = fs.createReadStream(filePath, {
-    flags: 'r',
-    // encoding: 'utf-8',
-    fd: null,
-    bufferSize: 1
-  });
+  // let test = fs.createReadStream(filePath, {
+  //   flags: 'r',
+  //   // encoding: 'utf-8',
+  //   fd: null,
+  //   bufferSize: 1
+  // });
 
-  test.on('data', (data) => {
-      console.log(data) 
-      call.write({path: data}); 
-      test.resume();
-    })
-    
-  test.on('end', () => {
-    call.end(); // ending the stream here
+
+  base64Img.base64(filePath, function(err, data) {
+    if(err) console.log(err);
+    console.log(data)
+    call.write({path: data})
+    call.end()
   })
-  test.end; // only ends when all data was read
+  
+  
+  // let test = fs.createReadStream(filePath, {encoding: 'base64'});
 
-  // console.log(readFile) // sends buffer data
-  // console.log(readFile.toString())
-  // call.write( readFile.toString() )
-  // call.write({path: readFile})
-  // call.end();
-
-  // fs.readFile(filePath, (err, result) => {
-  //   if(err) console.log(err);
-  //   // result = result.toString()
-  //   // console.log(result)
-  //   console.log(call.getPeer(), ' <---- Get peer')
-  //   // console.log(call) // serverduplexstream
-  //   call.write({path: result}, () => {
-  //     console.log('OK')
+  // test.on('data', (data) => {
+  //     // console.log(data) 
+  //     call.write({path: data}); 
+  //     test.resume();
   //   })
     
-  //   call.end()
-  // });  
+  // test.on('end', () => {
+  //   call.end(); // ending the stream here
+  // })
+  // test.end; // only ends when all data was read
 
 
-  // return filePath
 }
 
 module.exports = {numberToNumber, readFile} 

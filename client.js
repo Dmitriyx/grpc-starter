@@ -1,5 +1,7 @@
 const grpc = require('grpc');
 const routeguide = require('./routeguide');
+const fs = require('fs');
+var base64Img = require('base64-img');
 
 
 const stub = new routeguide.RouteGuide(
@@ -22,22 +24,51 @@ const ourNumber = {
 //   // console.log(number, 'in client js');
 // });
 
+
+
+
 // stub.readFile();
 const test = stub.readFile();
 // console.log(test)
 
-let allBuffers= [];
+let allBuffers = [];
+
 test.on('data', (result) => {
   ({path} = result);
+  console.log('in here')
+
   test.write({path: 'OK'}, () => {
     console.log('OK wwas sent')
   })
+
   // console.log( result )
   allBuffers.push(path);
-  console.log(allBuffers.join())
+  // console.log(allBuffers.join())
+
+  // fs.writeFile('clonePNG.png', allBuffers.join(), (err) => {
+  //   if(err) console.log(err)
+  //   console.log('DONE')
+  // })
+
+  // writeFileTest.on('finish', () => {
+  //   base64Img.img(allBuffers.join(), './', 'decodedPNG.png', (err, filePath) => {
+  //     if(err) console.log(err);
+  //     console.log(filePath)
+  //   })
+  // })
+  // console.log(allBuffers.join())
+
 });
 
-// let listener = new ListenerBuilder();
-// console.log(listener)
+test.on('end', () => {
+  let tester = allBuffers.join();
+  console.log(tester)
+  // tester = 'data:' + tester + ';base64,';
+  // fs.writeFileSync('./TesterForValidity.txt', tester)
+  // console.log(tester)
+  base64Img.imgSync(tester, './', 'decodedJPG')
+})
+
+
 
 
